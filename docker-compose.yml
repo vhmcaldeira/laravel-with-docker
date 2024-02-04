@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+    laravel-docker:
+        build: ./
+        ports:
+            - 9002:80
+        volumes:
+            ##aqui eu cocompartilho meu volume com o volume do container, ou seja, quando eu mexer aqui reflete la
+            - ./:/usr/share/nginx/html
+        restart: always
+        networks:
+            - docker
+    db:
+        image: mysql
+        restart: always
+        ports:
+            - 3308:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: docker
+            MYSQL_DATABASE: docker
+            MYSQL_USER: docker
+            MYSQL_PASSWORD: docker
+        volumes:
+            - docker/dbdata:/var/lib/mysql
+        networks:
+            - docker
+        ## para conectar com dbeaver tive que colocar no host jdbc:mysql://localhost:3306/db?allowPublicKeyRetrieval=true&useSSL=false
+        ## pois dava um erro de public key retrival
+
+networks:
+    docker:
+        driver: bridge
+
